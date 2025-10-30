@@ -1,0 +1,24 @@
+# web/app.py
+"""Flask API mínima para expor o motor AtlasAI via HTTP."""
+from flask import Flask, request, jsonify
+from core.engine import handle_user_input
+from core.logger import get_logger
+
+logger = get_logger(__name__)
+app = Flask(__name__)
+
+@app.route('/api/execute', methods=['POST'])
+def execute():
+    data = request.json or {}
+    command = data.get('command')
+    if not command:
+        return jsonify({'status': 'error', 'message': 'command required'}), 400
+    result = handle_user_input(command)
+    return jsonify(result)
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok'})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
