@@ -1,0 +1,27 @@
+# modules/email_module.py
+"""Módulo de exemplo que 'envia' e-mails. Aqui apenas simula e grava log no disco.
+Substitua pela integração real (smtplib, SendGrid, etc) se quiser.
+"""
+import os
+import json
+from core.logger import get_logger
+
+logger = get_logger(__name__)
+
+OUT_DIR = os.path.join(os.getcwd(), 'data', 'email_out')
+os.makedirs(OUT_DIR, exist_ok=True)
+
+def run(params: dict):
+    to = params.get('to', 'test@example.com')
+    subject = params.get('subject', 'Sem assunto')
+    body = params.get('body', '')
+    payload = {
+        'to': to,
+        'subject': subject,
+        'body': body
+    }
+    fname = os.path.join(OUT_DIR, f"email_{len(os.listdir(OUT_DIR))+1}.json")
+    with open(fname, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    logger.info(f"Simulado envio de email para {to}. Arquivo: {fname}")
+    return {'status': 'ok', 'file': fname}
