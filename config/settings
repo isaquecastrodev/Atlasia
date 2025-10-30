@@ -1,0 +1,8 @@
+{
+  "app_name": "AtlasAI",
+  "version": "0.1.0",
+  "openai": {
+    "enabled": false,
+    "model": "gpt-4o"
+  }
+}
