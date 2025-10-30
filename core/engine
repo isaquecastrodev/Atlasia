@@ -1,0 +1,25 @@
+# core/engine.py
+"""Motor principal do AtlasAI: recebe comandos em texto, interpreta (via command_parser)
+e executa o módulo correspondente via module_loader.
+"""
+from core.command_parser import interpret_command
+from core.module_loader import execute_module
+from core.logger import get_logger
+
+logger = get_logger(__name__)
+
+def handle_user_input(command: str):
+    logger.info(f"Recebido comando: {command}")
+    intent, params = interpret_command(command)
+    logger.info(f"Interpretado: intent={intent}, params={params}")
+    result = execute_module(intent, params)
+    logger.info(f"Resultado da execução: {result}")
+    return result
+
+if __name__ == "__main__":
+    # exemplo de uso rápido
+    while True:
+        cmd = input("Comando> ")
+        if cmd.lower() in ("exit", "sair", "quit"):
+            break
+        print(handle_user_input(cmd))
